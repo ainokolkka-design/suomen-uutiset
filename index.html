@@ -1,0 +1,654 @@
+<!doctype html>
+<html lang="fi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Suomen uutiset · HS · IL · IS</title>
+<meta name="description" content="Tuoreimmat uutiset Helsingin Sanomista, Iltalehdestä ja Ilta-Sanomista yhdellä sivulla.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700;9..144,900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  color-scheme: light;
+  --bg: #f6f1e7;
+  --bg-soft: #faf6ec;
+  --card: #ffffff;
+  --border: #e3dccb;
+  --border-soft: #ede7d6;
+  --ink: #15140f;
+  --ink-soft: #3b3a32;
+  --muted: #76736a;
+  --dim: #9e9b91;
+  --hover: #f3eedf;
+  --hs: #1759b3;
+  --hs-soft: #e5edf8;
+  --il: #c5113c;
+  --il-soft: #fae5ea;
+  --is: #007a3d;
+  --is-soft: #e0efe6;
+  --shadow: 0 1px 2px rgba(20, 18, 12, 0.04), 0 6px 14px rgba(20, 18, 12, 0.05);
+  --shadow-hover: 0 2px 4px rgba(20, 18, 12, 0.06), 0 14px 28px rgba(20, 18, 12, 0.10);
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  background:
+    radial-gradient(1000px 600px at 0% 0%, #fbf6e7 0%, transparent 70%),
+    radial-gradient(800px 500px at 100% 0%, #f3ecdb 0%, transparent 70%),
+    var(--bg);
+  background-attachment: fixed;
+  color: var(--ink);
+  line-height: 1.45;
+  font-size: 14px;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* ------------ HEADER ------------ */
+header {
+  padding: 24px 28px 18px;
+  border-bottom: 1px solid var(--border);
+  background: linear-gradient(to bottom, var(--bg-soft), transparent);
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.brand {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.brand h1 {
+  font-family: "Fraunces", Georgia, serif;
+  font-weight: 900;
+  font-style: normal;
+  font-size: clamp(28px, 4vw, 44px);
+  letter-spacing: -0.025em;
+  line-height: 1;
+  margin: 0;
+  color: var(--ink);
+}
+.brand .date {
+  font-size: 12.5px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-weight: 500;
+}
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 13px;
+  color: var(--muted);
+}
+.live-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #dc2626;
+  margin-right: 6px;
+  animation: pulse 1.6s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%      { opacity: 0.4; transform: scale(1.3); }
+}
+#status { font-variant-numeric: tabular-nums; }
+.btn {
+  font: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink);
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 7px 14px;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, transform 0.1s;
+  box-shadow: var(--shadow);
+}
+.btn:hover { background: var(--hover); border-color: #cfc7b1; }
+.btn:active { transform: translateY(1px); }
+.btn:disabled { opacity: 0.5; cursor: default; transform: none; }
+
+/* ------------ GRID ------------ */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0;
+}
+@media (max-width: 980px) {
+  .grid { grid-template-columns: 1fr; }
+}
+.col {
+  border-right: 1px solid var(--border);
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+.col:last-child { border-right: none; }
+@media (max-width: 980px) {
+  .col { border-right: none; border-bottom: 1px solid var(--border); }
+}
+
+/* ------------ COLUMN HEADER ------------ */
+.col-head {
+  position: sticky;
+  top: 0;
+  background: var(--bg);
+  padding: 0;
+  z-index: 2;
+  border-bottom: 1px solid var(--border);
+}
+.col-head .stripe {
+  height: 4px;
+  background: linear-gradient(90deg, transparent, var(--brand), transparent);
+}
+.col-head-inner {
+  padding: 16px 22px 12px;
+}
+.col-head .name {
+  font-family: "Fraunces", Georgia, serif;
+  font-weight: 700;
+  font-size: 17px;
+  letter-spacing: -0.01em;
+  color: var(--brand);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.col-head .name .pill {
+  font-family: "Inter", sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: var(--brand-soft);
+  color: var(--brand);
+  padding: 2px 7px;
+  border-radius: 999px;
+}
+.col-head .meta {
+  margin-top: 4px;
+  font-size: 11.5px;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+.brand-hs { --brand: var(--hs); --brand-soft: var(--hs-soft); }
+.brand-il { --brand: var(--il); --brand-soft: var(--il-soft); }
+.brand-is { --brand: var(--is); --brand-soft: var(--is-soft); }
+
+/* ------------ LIST + ITEMS ------------ */
+.list {
+  padding: 16px 16px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 1;
+}
+.item {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s;
+  box-shadow: var(--shadow);
+  opacity: 0;
+  transform: translateY(8px);
+  animation: fadeUp 0.4s ease-out forwards;
+}
+.item:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-hover);
+  border-color: #d8cfb4;
+}
+.item:hover .img-wrap img { transform: scale(1.04); }
+@keyframes fadeUp {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* HERO (first item) */
+.item.hero { padding: 0; }
+.item.hero .img-wrap {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  background: var(--border-soft);
+  overflow: hidden;
+  position: relative;
+}
+.item.hero .img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+.item.hero .body { padding: 14px 16px 16px; }
+.item.hero .title {
+  font-family: "Fraunces", Georgia, serif;
+  font-size: 20px;
+  line-height: 1.18;
+  font-weight: 700;
+  letter-spacing: -0.012em;
+  margin: 0 0 6px;
+  color: var(--ink);
+}
+.item.hero .desc {
+  font-size: 13px;
+  color: var(--ink-soft);
+  margin: 0 0 8px;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  line-height: 1.45;
+}
+
+/* COMPACT (rest) */
+.item.compact {
+  display: grid;
+  grid-template-columns: 96px 1fr;
+  gap: 0;
+  padding: 0;
+}
+.item.compact.no-img { grid-template-columns: 1fr; }
+.item.compact .img-wrap {
+  width: 96px;
+  height: 100%;
+  min-height: 84px;
+  background: var(--border-soft);
+  overflow: hidden;
+}
+.item.compact .img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+.item.compact .body { padding: 11px 14px; }
+.item.compact .title {
+  font-family: "Fraunces", Georgia, serif;
+  font-size: 14.5px;
+  line-height: 1.25;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  margin: 0 0 4px;
+  color: var(--ink);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* shared meta row */
+.item .meta-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  flex-wrap: wrap;
+}
+.cat {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--brand);
+  background: var(--brand-soft);
+  padding: 2px 7px;
+  border-radius: 999px;
+}
+.dot-sep {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--dim);
+  display: inline-block;
+}
+
+/* ------------ STATES ------------ */
+.skel, .err {
+  padding: 20px 22px;
+  font-size: 13px;
+  background: var(--card);
+  border: 1px dashed var(--border);
+  border-radius: 12px;
+  text-align: center;
+}
+.skel { color: var(--dim); }
+.err  { color: #b44; }
+.err code {
+  background: #fbeaea;
+  padding: 1px 5px;
+  border-radius: 3px;
+  font-size: 11.5px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+/* ------------ FOOTER ------------ */
+footer {
+  padding: 18px 28px 28px;
+  border-top: 1px solid var(--border);
+  background: var(--bg-soft);
+  font-size: 11.5px;
+  color: var(--muted);
+  text-align: center;
+}
+footer a { color: var(--ink-soft); text-decoration: none; border-bottom: 1px dotted var(--dim); }
+footer a:hover { color: var(--ink); }
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">
+    <h1>Suomen uutiset</h1>
+    <div class="date" id="today">—</div>
+  </div>
+  <div class="controls">
+    <span><span class="live-dot"></span><span id="status">Ladataan…</span></span>
+    <button class="btn" id="reload" type="button">Päivitä</button>
+  </div>
+</header>
+
+<main class="grid">
+  <section class="col brand-hs">
+    <div class="col-head">
+      <div class="stripe"></div>
+      <div class="col-head-inner">
+        <div class="name">Helsingin Sanomat <span class="pill">HS</span></div>
+        <div class="meta" id="meta-hs">hs.fi</div>
+      </div>
+    </div>
+    <div class="list" id="list-hs"><div class="skel">Ladataan otsikoita…</div></div>
+  </section>
+  <section class="col brand-il">
+    <div class="col-head">
+      <div class="stripe"></div>
+      <div class="col-head-inner">
+        <div class="name">Iltalehti <span class="pill">IL</span></div>
+        <div class="meta" id="meta-il">iltalehti.fi</div>
+      </div>
+    </div>
+    <div class="list" id="list-il"><div class="skel">Ladataan otsikoita…</div></div>
+  </section>
+  <section class="col brand-is">
+    <div class="col-head">
+      <div class="stripe"></div>
+      <div class="col-head-inner">
+        <div class="name">Ilta-Sanomat <span class="pill">IS</span></div>
+        <div class="meta" id="meta-is">is.fi</div>
+      </div>
+    </div>
+    <div class="list" id="list-is"><div class="skel">Ladataan otsikoita…</div></div>
+  </section>
+</main>
+
+<footer>
+  Otsikot haetaan suoraan kunkin lehden RSS-syötteestä. Tämä sivusto ei ole
+  <a href="https://www.hs.fi" target="_blank" rel="noopener">HS:n</a>,
+  <a href="https://www.iltalehti.fi" target="_blank" rel="noopener">IL:n</a> tai
+  <a href="https://www.is.fi" target="_blank" rel="noopener">IS:n</a> virallinen tuote.
+</footer>
+
+<script>
+const SOURCES = [
+  { key: "hs", name: "Helsingin Sanomat", host: "hs.fi",         url: "https://www.hs.fi/rss/tuoreimmat.xml" },
+  { key: "il", name: "Iltalehti",         host: "iltalehti.fi",  url: "https://www.iltalehti.fi/rss/uutiset.xml" },
+  { key: "is", name: "Ilta-Sanomat",      host: "is.fi",         url: "https://www.is.fi/rss/tuoreimmat.xml" },
+];
+const MAX_ITEMS = 25;
+const FETCH_TIMEOUT_MS = 12000;
+
+// --- helpers ---
+function escapeHtml(s) {
+  return String(s ?? "").replace(/[&<>"']/g, c => (
+    {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]
+  ));
+}
+function decodeEntities(s) {
+  if (!s) return "";
+  const t = document.createElement("textarea");
+  t.innerHTML = s;
+  return t.value;
+}
+function stripTags(s) {
+  return decodeEntities(String(s || "")).replace(/<[^>]+>/g, "").trim();
+}
+function relativeTime(date) {
+  if (!date) return "";
+  const diff = (Date.now() - date.getTime()) / 1000;
+  if (diff < 60) return "juuri nyt";
+  if (diff < 3600) return Math.floor(diff / 60) + " min sitten";
+  if (diff < 86400) return Math.floor(diff / 3600) + " h sitten";
+  if (diff < 7 * 86400) return Math.floor(diff / 86400) + " pv sitten";
+  return date.toLocaleDateString("fi-FI", { day: "numeric", month: "numeric" });
+}
+function findImageInHtml(html) {
+  const m = String(html || "").match(/<img[^>]+src=["']([^"']+)["']/i);
+  return m ? m[1] : "";
+}
+function findImageUrl(text) {
+  const m = String(text || "").match(/https?:\/\/[^\s'"<>]+\.(?:jpg|jpeg|png|webp)(?:\?[^\s'"<>]*)?/i);
+  return m ? m[0] : "";
+}
+
+async function fetchWithTimeout(url) {
+  const ctrl = new AbortController();
+  const t = setTimeout(() => ctrl.abort(), FETCH_TIMEOUT_MS);
+  try {
+    const r = await fetch(url, { cache: "no-store", signal: ctrl.signal });
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    return await r.text();
+  } finally {
+    clearTimeout(t);
+  }
+}
+
+// --- RSS XML parser (full data, including images) ---
+function parseRSS(xmlText) {
+  const doc = new DOMParser().parseFromString(xmlText, "application/xml");
+  if (doc.querySelector("parsererror")) return [];
+  const NS_MEDIA = "http://search.yahoo.com/mrss/";
+  const NS_CONTENT = "http://purl.org/rss/1.0/modules/content/";
+  const items = [...doc.querySelectorAll("item")];
+  return items.map(it => {
+    const get = sel => {
+      const el = it.querySelector(sel);
+      return el ? el.textContent.trim() : "";
+    };
+    const title = decodeEntities(get("title"));
+    const link  = get("link");
+    const desc  = stripTags(get("description"));
+    const pubDate = get("pubDate");
+    const cat = get("category");
+
+    // image: enclosure -> media:content -> media:thumbnail -> first <img> in description/content
+    let image = "";
+    const enc = it.querySelector("enclosure");
+    if (enc && /^image\//i.test(enc.getAttribute("type") || "")) {
+      image = enc.getAttribute("url") || "";
+    }
+    if (!image) {
+      const mc = it.getElementsByTagNameNS(NS_MEDIA, "content")[0];
+      if (mc) image = mc.getAttribute("url") || "";
+    }
+    if (!image) {
+      const mt = it.getElementsByTagNameNS(NS_MEDIA, "thumbnail")[0];
+      if (mt) image = mt.getAttribute("url") || "";
+    }
+    if (!image) {
+      const ce = it.getElementsByTagNameNS(NS_CONTENT, "encoded")[0];
+      if (ce) image = findImageInHtml(ce.textContent || "");
+    }
+    if (!image) {
+      const descEl = it.querySelector("description");
+      if (descEl) image = findImageInHtml(descEl.textContent || "");
+    }
+
+    const d = pubDate ? new Date(pubDate) : null;
+    return {
+      title, link, desc, image,
+      category: cat,
+      date: d && !isNaN(d) ? d : null,
+    };
+  }).filter(x => x.title && x.link);
+}
+
+// --- fetch strategies (raw XML preferred for richer data) ---
+const STRATEGIES = [
+  // codetabs proxy: returns the raw RSS XML, including images. Reliable & fast.
+  async (rssUrl) => {
+    const u = `https://api.codetabs.com/v1/proxy/?quest=${encodeURIComponent(rssUrl)}`;
+    const xml = await fetchWithTimeout(u);
+    return parseRSS(xml);
+  },
+  // rss2json: parsed JSON. Capped at 10 items on free tier; loses some images
+  // but is a solid backstop if the proxy is down.
+  async (rssUrl) => {
+    const u = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}`;
+    const text = await fetchWithTimeout(u);
+    const data = JSON.parse(text);
+    if (data.status !== "ok" || !Array.isArray(data.items)) {
+      throw new Error(data.message || "rss2json: bad response");
+    }
+    return data.items.map(it => {
+      let image = (it.enclosure && it.enclosure.link) || it.thumbnail || "";
+      if (!image) image = findImageInHtml(it.content || it.description || "");
+      if (!image) image = findImageUrl(it.content || it.description || "");
+      const d = it.pubDate ? new Date(it.pubDate.replace(" ", "T") + "Z") : null;
+      return {
+        title: it.title || "",
+        link: it.link || "",
+        desc: stripTags(it.description || ""),
+        image,
+        category: (Array.isArray(it.categories) && it.categories[0]) || "",
+        date: d && !isNaN(d) ? d : null,
+      };
+    }).filter(x => x.title && x.link);
+  },
+  // allorigins raw: last-resort fallback.
+  async (rssUrl) => {
+    const u = `https://api.allorigins.win/raw?url=${encodeURIComponent(rssUrl)}`;
+    const xml = await fetchWithTimeout(u);
+    return parseRSS(xml);
+  },
+];
+
+async function fetchItems(rssUrl) {
+  let lastErr;
+  for (const strategy of STRATEGIES) {
+    try {
+      const items = await strategy(rssUrl);
+      if (items && items.length) return items;
+      throw new Error("no items");
+    } catch (e) { lastErr = e; }
+  }
+  throw lastErr || new Error("all strategies failed");
+}
+
+// --- rendering ---
+function itemHTML(it, opts) {
+  const isHero = opts && opts.hero;
+  const hasImg = !!it.image;
+  const safeImg = hasImg ? escapeHtml(it.image) : "";
+  const cat = it.category ? `<span class="cat">${escapeHtml(it.category)}</span>` : "";
+  const when = it.date ? `<span>${escapeHtml(relativeTime(it.date))}</span>` : "";
+  const sep = (it.category && it.date) ? `<span class="dot-sep"></span>` : "";
+
+  if (isHero) {
+    return `
+      <a class="item hero" href="${escapeHtml(it.link)}" target="_blank" rel="noopener noreferrer" style="animation-delay:${opts.delay}ms">
+        ${hasImg ? `<div class="img-wrap"><img src="${safeImg}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.parentElement.style.display='none'"></div>` : ""}
+        <div class="body">
+          <h2 class="title">${escapeHtml(it.title)}</h2>
+          ${it.desc ? `<p class="desc">${escapeHtml(it.desc)}</p>` : ""}
+          <div class="meta-row">${cat}${sep}${when}</div>
+        </div>
+      </a>
+    `;
+  }
+  return `
+    <a class="item compact ${hasImg ? "" : "no-img"}" href="${escapeHtml(it.link)}" target="_blank" rel="noopener noreferrer" style="animation-delay:${opts.delay}ms">
+      ${hasImg ? `<div class="img-wrap"><img src="${safeImg}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="const w=this.parentElement; const a=w.parentElement; w.remove(); a.classList.add('no-img'); a.style.gridTemplateColumns='1fr'"></div>` : ""}
+      <div class="body">
+        <h3 class="title">${escapeHtml(it.title)}</h3>
+        <div class="meta-row">${cat}${sep}${when}</div>
+      </div>
+    </a>
+  `;
+}
+
+function render(key, items) {
+  const list = document.getElementById("list-" + key);
+  const meta = document.getElementById("meta-" + key);
+  const src = SOURCES.find(s => s.key === key);
+  if (!items.length) {
+    list.innerHTML = '<div class="err">Ei otsikoita saatavilla.</div>';
+    meta.textContent = `${src.host} · ei tuloksia`;
+    return;
+  }
+  items.sort((a, b) => (b.date?.getTime() ?? 0) - (a.date?.getTime() ?? 0));
+  items = items.slice(0, MAX_ITEMS);
+  const t = new Date().toLocaleTimeString("fi-FI", { hour: "2-digit", minute: "2-digit" });
+  meta.textContent = `${src.host} · ${items.length} otsikkoa · klo ${t}`;
+  const html = items.map((it, i) => itemHTML(it, { hero: i === 0, delay: i * 35 })).join("");
+  list.innerHTML = html;
+}
+
+function renderError(key, msg) {
+  const list = document.getElementById("list-" + key);
+  const meta = document.getElementById("meta-" + key);
+  const src = SOURCES.find(s => s.key === key);
+  list.innerHTML = `<div class="err">Lataus epäonnistui. <code>${escapeHtml(msg)}</code></div>`;
+  meta.textContent = `${src.host} · virhe`;
+}
+
+async function loadOne(src) {
+  const list = document.getElementById("list-" + src.key);
+  list.innerHTML = '<div class="skel">Ladataan otsikoita…</div>';
+  try {
+    const items = await fetchItems(src.url);
+    render(src.key, items);
+  } catch (e) {
+    renderError(src.key, e?.message || String(e));
+  }
+}
+
+const reloadBtn = document.getElementById("reload");
+const statusEl  = document.getElementById("status");
+const todayEl   = document.getElementById("today");
+
+function updateDate() {
+  todayEl.textContent = new Date().toLocaleDateString("fi-FI", {
+    weekday: "long", day: "numeric", month: "long", year: "numeric",
+  });
+}
+
+async function loadAll() {
+  reloadBtn.disabled = true;
+  statusEl.textContent = "Ladataan…";
+  await Promise.all(SOURCES.map(loadOne));
+  const t = new Date().toLocaleTimeString("fi-FI", { hour: "2-digit", minute: "2-digit" });
+  statusEl.textContent = `Päivitetty klo ${t}`;
+  reloadBtn.disabled = false;
+}
+
+reloadBtn.addEventListener("click", loadAll);
+updateDate();
+loadAll();
+// Auto-refresh every 5 minutes if the tab is open
+setInterval(() => { if (!document.hidden) loadAll(); }, 5 * 60 * 1000);
+</script>
+</body>
+</html>
